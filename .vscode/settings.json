@@ -1,0 +1,17 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "extensions.ignoreRecommendations": false,
+  "files.exclude": {
+    "**/__init__.py": true,
+    "**/__pycache__": true
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.formatting.provider": "black",
+  "python.languageServer": "Pylance",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false
+}

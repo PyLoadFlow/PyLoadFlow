@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "frhtylcn.pythonsnippets",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.vscode-pylance"
+  ]
+}
