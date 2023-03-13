@@ -1,9 +1,16 @@
 {
   "recommendations": [
+    "MS-CEINTL.vscode-language-pack-es",
+    "PKief.material-icon-theme",
     "aaron-bond.better-comments",
+    "christian-kohler.path-intellisense",
     "frhtylcn.pythonsnippets",
-    "ms-python.python",
     "ms-python.black-formatter",
-    "ms-python.vscode-pylance"
+    "ms-python.isort",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "njpwerner.autodocstring",
+    "redhat.vscode-yaml",
+    "sldobri.bunker"
   ]
 }

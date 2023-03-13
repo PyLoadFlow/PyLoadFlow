@@ -7,11 +7,14 @@
   "extensions.ignoreRecommendations": false,
   "files.exclude": {
     "**/__init__.py": true,
-    "**/__pycache__": true
+    "**/__pycache__": true,
+    "**/*.lnk": true,
+    ".pytest_cache": true
   },
   "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "black",
   "python.languageServer": "Pylance",
   "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false
+  "python.linting.pylintEnabled": false,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt"
 }
