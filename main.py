@@ -11,6 +11,10 @@ def _(name, value="__usename__"):
         cpprint(globals()[name], end="\n\n")
         return
 
+    if value == "__eval__":
+        cpprint(eval(name), end="\n\n")
+        return
+
     cpprint(value, end="\n\n")
 
 
@@ -33,8 +37,6 @@ Y = np.array(
     ],
     dtype=np.complex128,
 )
-
-B = np.zeros([3, 3])
 
 V = np.array([1.05, 1 + 0j, 1.04])
 
@@ -60,9 +62,9 @@ BUS_TYPES = SLACK, PQ, PV
 
 bus = np.array(
     [
-        [1, 2],  # for bus 0
-        [0, 2],  # for bus 1
-        [0, 1],  # for bus 2
+        [0, 1, 2],
+        [0, 1, 2],
+        [0, 1, 2],
     ]
 )
 
@@ -77,52 +79,56 @@ bus = np.array(
     
     *********************************
 """
-n = len(Y)
-# _2n = n * 2 - 1
+n = len(Y) * 2
 
 NON_SLACK_BUSES = filter(lambda y: y is not SLACK, BUS_TYPES)
+NON_SLACK_BUSES_X = filter(lambda y: y is not SLACK, BUS_TYPES)
+NON_SLACK_BUSES_Y = filter(lambda y: y is not SLACK, BUS_TYPES)
+
 PQ_BUSES = filter(lambda y: y is PQ, BUS_TYPES)
 PV_BUSES = filter(lambda y: y is PV, BUS_TYPES)
 
 # E and U are linked to V, same P, Q, G and B
 E, U = V.real, V.imag
 P, Q = S.real, S.imag
-G, B = Y.real, Y.imag
+G, _B = Y.real, Y.imag
 
-dIm = np.empty(n)
-dIr = np.empty(n)
 dI = np.empty(n)
-dE = np.empty(n)
-dU = np.empty(n)
-dQ = np.empty(n)
+dV = np.empty(n)
 
-I = np.empty(n)
+J = np.empty([n, n])
 
-J = np.empty(n)
+# variables = []
+# functions = []
 
-variables = []
-functions = []
+# for y in PQ_BUSES:
+#     functions.append(["dIm_PQ", y])
+#     functions.append(["dIr_PQ", y])
 
-for y in PQ_BUSES:
-    functions.append(["dIm", y, dIm])
-    functions.append(["dIr", y, dIr])
-
-    variables.append(["E", y, E])
-    variables.append(["U", y, U])
+#     variables.append(["E", Y])
+#     variables.append(["U", y])
 
 
-for y in PV_BUSES:
-    functions.append(["dIm", y, dIm])
-    functions.append(["dIr", y, dIr])
+# for y in PV_BUSES:
+#     functions.append(["dIr_PV", y])
+#     functions.append(["dIm_PV", y])
 
-    variables.append(["U", y, U])
-    variables.append(["Q", y, Q])
+#     variables.append(["E", y])
+#     variables.append(["Q", y])
 
 """
     main algorithm
 """
+# Getting main jacobian
+for y in NON_SLACK_BUSES_Y:
+    for x in NON_SLACK_BUSES_X:
+        for rm in "r", "m":
+            print(f"ΔI{rm}[{y}]:V{rm}[{x}]", end="\t")
 
-for nit in range(1):
+    print()
+
+
+for nit in range(0):
     # calculating current unbalance
     for y in NON_SLACK_BUSES:
         i_calc = 0 + 0j
@@ -133,9 +139,6 @@ for nit in range(1):
 
         p = P[y] * (az * v**2 + ai * v + ap)
         q = Q[y] * (bz * v**2 + bi * v + bq)
-
-        for x in bus[y]:
-            i_calc += V[x] * (0.5j * _B[x, y] - Y[x, y]) + V[y] * Y[x, y]
 
         dI[y] = (p - 1j * q) / np.conj(V[y]) - i_calc
 
@@ -167,7 +170,7 @@ def __():
     # getting zip model potences
     v = abs(V)
     vp = (v**ZIP_POTENCES).transpose()
-    p = vp * P_FACTORS
+    p = vp * P_FACTORS + _B
     q = vp * Q_FACTORS
     _("P_FACTORS")
     _("Q_FACTORS")
