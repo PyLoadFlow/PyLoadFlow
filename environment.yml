@@ -9,3 +9,4 @@ dependencies:
   - prettyprinter=0.18
   - pytest=7.2
   - python=3.11
+  - scipy=1.10

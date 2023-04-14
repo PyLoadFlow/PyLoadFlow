@@ -1,3 +1,1 @@
-from .ConvergenceError import ConvergenceError
-
-__all__ = 'ConvergenceError',
+from lib.errors.ConvergenceError import *
