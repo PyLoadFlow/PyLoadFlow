@@ -1,4 +1,4 @@
-def join_methods(*funcs, **kwfuncs):
+def bind_methods(*funcs, **kwfuncs):
     def decorator(Class):
         for func in funcs:
             setattr(Class, func.__name__, func)

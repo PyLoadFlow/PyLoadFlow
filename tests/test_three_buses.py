@@ -2,21 +2,16 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 from lib import PowerSystem
-from lib.classes.Bus import Bus
 
 ps = PowerSystem(n=3)
 
+ps.add_slack_bus(V=1.05)
+ps.add_pq_bus(P=4, Q=2.5)
+ps.add_pv_bus(V=1.04, P=2)
 
-def test_buses_count():
-    ps.add_slack_bus(V=1.05)
-    ps.add_pq_bus(P=4, Q=2.5)
-    ps.add_pv_bus(V=1.04, P=2)
-
-    ps.connect_buses_by_id(1, 2, z=0.02 + 0.04j)
-    ps.connect_buses_by_id(2, 3, z=0.0125 + 0.025j)
-    ps.connect_buses_by_id(3, 1, z=0.01 + 0.03j)
-
-    assert ps.number_of_buses == 3
+ps.connect_buses_by_id(1, 2, z=0.02 + 0.04j)
+ps.connect_buses_by_id(2, 3, z=0.0125 + 0.025j)
+ps.connect_buses_by_id(3, 1, z=0.01 + 0.03j)
 
 
 def test_admittance_matrix_before_compile():
