@@ -13,10 +13,6 @@ def allocate_electric_params(self):
     # allocate admittances, they are at majority constant zeros, so it's sparse matrix
     self.line_series_admittance_pu = lil_matrix((n, n), dtype=cplx)  # type: ignore
 
-    # initializing empty Ybus diagonal because empty() doesnt warranty zero initial value
-    for i in range(n):
-        self.line_series_admittance_pu[i, i] = 0
-
     # V = E + jU
     self.bus_real_voltage_pu = self.bus_voltage_pu.real
     self.bus_imaginary_voltage_pu = self.bus_voltage_pu.imag

@@ -4,24 +4,25 @@ import numpy as np
 
 @define
 class SlackBus(Bus):
-    def define_initial_conditions(self, y, V, δ):
-        self.power_system.bus_real_voltage_pu[y] = V * np.cos(δ)
-        self.power_system.bus_imaginary_voltage_pu[y] = V * np.sin(δ)
+    def define_initial_conditions(self, V, δ):
+        self.power_system.bus_real_voltage_pu[self.yid] = V * np.cos(δ)
+        self.power_system.bus_imaginary_voltage_pu[self.yid] = V * np.sin(δ)
 
 
 @define
 class PVBus(Bus):
-    def define_initial_conditions(self, y, P, V, δ=0):
-        self.power_system.bus_programed_real_power[y] = P
-        self.power_system.bus_real_voltage_pu[y] = V * np.cos(δ)
-        self.power_system.bus_imaginary_voltage_pu[y] = V * np.sin(δ)
+    fixed_voltage: float
+
+    def define_initial_conditions(self, P):
+        self.power_system.bus_programed_real_power[self.yid] = P
+        self.power_system.bus_real_voltage_pu[self.yid] = self.fixed_voltage
 
 
 @define
 class PQBus(Bus):
-    def define_initial_conditions(self, y, P, Q):
-        self.power_system.bus_programed_real_power[y] = -P
-        self.power_system.bus_programed_reactive_power[y] = -Q
+    def define_initial_conditions(self, P, Q):
+        self.power_system.bus_programed_real_power[self.yid] = -P
+        self.power_system.bus_programed_reactive_power[self.yid] = -Q
 
 
 @define
