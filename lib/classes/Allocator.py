@@ -12,10 +12,10 @@ class Allocator:
         self.number_of_buses = n
 
         # allocate voltages with inicial values of 1
-        self.bus_voltage_pu = lil_matrix((n, 1), dtype=Allocator.complex_dtype)
-
+        self.bus_voltage_pu = np.empty(n, dtype=Allocator.complex_dtype)
+        
         # allocate powers with inicial values of 0
-        self.bus_programed_apparent_power = lil_matrix((n, 1), dtype=Allocator.complex_dtype)
+        self.bus_programed_apparent_power = np.empty(n, dtype=Allocator.complex_dtype)
 
         # allocate admittances with inicial values of 0
         self.line_series_admittance_pu = lil_matrix((n, n), dtype=Allocator.complex_dtype)

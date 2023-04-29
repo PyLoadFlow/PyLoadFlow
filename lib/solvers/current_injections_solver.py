@@ -26,7 +26,7 @@ def current_injections_solver(self, max_nit, tol):
 
             # J[x,y] = Y'[x,y]
             J[i : i + 2, j : j + 2] = [
-                [-G[x, y], β[x, y]],
+                [-G[x, y], +β[x, y]],
                 [-β[x, y], -G[x, y]],
             ]
 
