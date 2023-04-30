@@ -1,1 +1,3 @@
-from lib.errors.ConvergenceError import *
+"""Errors compilation"""
+
+from lib.errors.buses_errors import *

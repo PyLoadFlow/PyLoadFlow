@@ -1,7 +1,4 @@
 {
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
-  },
   "editor.formatOnSave": true,
   "editor.tabSize": 4,
   "extensions.ignoreRecommendations": false,
@@ -14,7 +11,10 @@
   "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "black",
   "python.languageServer": "Pylance",
-  "python.linting.enabled": true,
+  "python.linting.enabled": false,
   "python.linting.pylintEnabled": false,
-  "terminal.integrated.defaultProfile.windows": "Command Prompt"
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
 }

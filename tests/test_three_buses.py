@@ -3,6 +3,7 @@ import numpy as np
 from numpy.testing import assert_allclose, assert_equal
 
 from lib import PowerSystem
+from lib.solvers.current_injections_solver import current_injections_solver
 
 ps = PowerSystem(n=3)
 
@@ -13,6 +14,7 @@ ps.add_pv_bus(P=2, V=1.04)
 ps.connect_buses_by_IEEE_id(1, 2, z=0.02 + 0.04j)
 ps.connect_buses_by_IEEE_id(2, 3, z=0.0125 + 0.025j)
 ps.connect_buses_by_IEEE_id(3, 1, z=0.01 + 0.03j)
+
 
 def test_status_before_compile():
     Y = np.array(
@@ -53,16 +55,29 @@ def test_inicial_conditions():
     assert ps.bus_programed_real_power[2] == 2
 
 
-# def test_filters():
-#     assert tuple(enumerate(ps.not_slack_buses())) == ((0, 1), (1, 2))
+def test_bus_currents():
+    assert np.allclose(ps.buses[1].programmed_current_pu, -4 + 2.5j)
+    assert np.allclose(ps.buses[2].programmed_current_pu, 1.92307692)
 
 
-# def test_bus_currents():
-#     assert np.allclose(ps.buses[1].programmed_current_pu, -4 + 2.5j)
-#     assert np.allclose(ps.buses[2].programmed_current_pu, 1.92307692)
+def test_filters():
+    assert_equal(ps.pq_buses_yids, [1])
+    assert_equal(ps.pv_buses_yids, [2])
 
 
-# def test_current_inyections():
-#     ΔI = np.array([[-2.86 + 0.22j], [1.38307692 + 0.98j]])
+def test_current_inyections():
+    solver = current_injections_solver(ps, 1, 0)
 
-#     assert_allclose(ps.solve(tol=10).toarray(), ΔI)
+    J, ΔI = next(solver)
+
+    assert_allclose(
+        J.toarray(),
+        [
+            [-26, -52, 0, 0],
+            [52, -26, 0, 0],
+            [16, 32, 0, 0],
+            [-32, 16, 0, 0],
+        ],
+    )
+
+    # assert_allclose(ΔI.toarray(), [[-2.86 + 0.22j], [1.38307692 + 0.98j]])

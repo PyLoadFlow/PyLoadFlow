@@ -4,7 +4,9 @@ from scipy.sparse import lil_matrix
 
 class Allocator:
     complex_dtype = np.complex128
-
+    float_dtype = np.float64
+    indexing_dtype = np.uint32
+    
     def __init__(self, n):
         self.allocate_electric_params(n)
 

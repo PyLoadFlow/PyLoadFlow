@@ -1,27 +1,27 @@
-# pyright: reportUndefinedVariable=false, reportGeneralTypeIssues=warning
-from lib.typing import *
+import numpy as np
 
-# from scipy.sparse.linalg import spsolve_triangular
+from scipy.sparse import lil_matrix
+from scipy.sparse.linalg import spsolve_triangular
 
-from lib.decorators import electric_system_method as electric
+from lib.classes.Allocator import Allocator
+from lib.decorators import electric_power_system_as_param as electric
 
 
 @electric
-def current_injections_solver(self, max_nit, tol):
+def current_injections_solver(power_system, max_nit, tol):
     # initial configuration
     m = 2 * (n - 1)
 
-    ΔI = lil_matrix((n - 1, 1), dtype=cplx)
-    J = lil_matrix((m, m))
+    ΔI = lil_matrix((n - 1, 1), dtype=Allocator.complex_dtype)
+    J = lil_matrix((m, m), dtype=Allocator.float_dtype)
 
     ΔIr, ΔIm = ΔI.real, ΔI.imag
 
-    # preparing jacobian
-    # building diagonal outside elements
-    for x, i in enumerate(self.not_slack_buses()):
+    # preparing
+    for i, x in enumerate(not_slack_buses):
         i *= 2
 
-        for y, j in enumerate(self.not_slack_buses()):
+        for j, y in enumerate(pq_buses):
             j *= 2
 
             # J[x,y] = Y'[x,y]
@@ -30,24 +30,22 @@ def current_injections_solver(self, max_nit, tol):
                 [-β[x, y], -G[x, y]],
             ]
 
-    # starting main loop
-    for nit in range(1, max_nit + 1):
-        # getting current unbalances
-        for i, y in enumerate(self.not_slack_buses()):
-            ΔI[i] = self.buses[y].programmed_current_pu - Y[y].dot(V)
+            # yield np.array(
+            #     [
+            #         [x, y],
+            #         [
+            #             power_system.line_series_admittance_pu.real[x, y],
+            #             power_system.line_series_admittance_pu.imag[x, y],
+            #         ],
+            #     ]
+            # )
+            # yield np.array(
+            #     [
+            #         [- power_system.line_series_conductance_pu[x, y], +β[x, y]],
+            #         [-β[x, y], -G[x, y]],
+            #     ]
+            # )
 
-        # checking max current unbalance
-        if np.abs(ΔI.tocsc().max()) <= tol:
-            return ΔI
-            # return nit
-
-        # for x, i in enumerate(self.not_slack_buses()):
-        #     i *= 2
-
-        #     for j, y in zip(PV_QUADRANTS, PV_BUSES):
-        #         J[i : i + 2, j] = [
-        #             G[x, y] * U[y] / E[y] + β[x, y],
-        #             β[x, y] * U[y] / E[y] - G[x, y],
-        #         ]
-
-    return ΔI
+    # main loop
+    for nit in range(max_nit):
+        yield J, ΔI
