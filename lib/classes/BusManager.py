@@ -40,7 +40,6 @@ class BusManager:
 
     def add_noload_bus(self):
         return PQBus(self)
-        
-    @property
+
     def not_slack_buses_yids(self):
         return chain(self.pq_buses_yids, self.pv_buses_yids)

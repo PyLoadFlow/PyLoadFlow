@@ -6,7 +6,7 @@ class Allocator:
     complex_dtype = np.complex128
     float_dtype = np.float64
     indexing_dtype = np.uint32
-    
+
     def __init__(self, n):
         self.allocate_electric_params(n)
 
@@ -15,7 +15,7 @@ class Allocator:
 
         # allocate voltages with inicial values of 1
         self.bus_voltage_pu = np.empty(n, dtype=Allocator.complex_dtype)
-        
+
         # allocate powers with inicial values of 0
         self.bus_programed_apparent_power = np.empty(n, dtype=Allocator.complex_dtype)
 

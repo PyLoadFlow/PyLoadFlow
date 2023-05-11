@@ -66,18 +66,28 @@ def test_filters():
 
 
 def test_current_inyections():
-    solver = current_injections_solver(ps, 1, 0)
+    solver = current_injections_solver(ps, 5, 0)
 
-    J, ΔI = next(solver)
+    nit, _, err = next(solver)
+    assert nit == 0
+
+    assert_allclose(err.toarray(), [[-2.86], [0.22], [1.38307692], [0.98]])
+
+    nit, J, err = next(solver)
+    assert nit == 1
 
     assert_allclose(
         J.toarray(),
         [
-            [-26, -52, 0, 0],
-            [52, -26, 0, 0],
-            [16, 32, 0, 0],
-            [-32, 16, 0, 0],
+            [-54.5, -22.0, +32, 0],
+            [-30.0, +49.5, +16, 0],
+            [+32.0, +16.0, -62, 0],
+            [+16.0, -32.0, -24.15088757, -0.96153846],
         ],
     )
 
-    # assert_allclose(ΔI.toarray(), [[-2.86 + 0.22j], [1.38307692 + 0.98j]])
+    assert_allclose(err.toarray(), [[0.0117910297], [0.008545474], [-0.011129543], [-0.0023352042]])
+
+    assert_allclose(ps.bus_voltage_pu, [1.05, 0.9706418 - 0.0458804j, 1.0399615 - 0.00894883j])
+    assert_allclose(ps.bus_programed_apparent_power[1:], [-4 - 2.5j, 2 + 1.45755795j])
+    
