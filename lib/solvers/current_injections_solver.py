@@ -3,18 +3,18 @@ import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import spsolve
 
-from lib.classes.Allocator import Allocator
+from lib.classes.PowerSystem_mixins.Allocator import Allocator
 from lib.decorators import electric_power_system_as_param as electric
 
 
 @electric
-def current_injections_solver(_, max_nit, tol):
+def current_injections_solver(_):
     ## initial configuration
     m = 2 * (n - 1)
 
-    ΔI = lil_matrix((n - 1, 1), dtype=Allocator.complex_dtype)
+    ΔI = np.empty(n - 1, dtype=Allocator.complex_dtype)
     J = lil_matrix((m, m), dtype=Allocator.float_dtype)
-    err = lil_matrix((m, 1), dtype=Allocator.float_dtype)
+    err = np.empty(m, dtype=Allocator.float_dtype)
     pq_quadrants = (pq_buses - 1) * 2
     pv_quadrants = (pv_buses - 1) * 2
 
@@ -22,9 +22,7 @@ def current_injections_solver(_, max_nit, tol):
 
     # Y' for elems outside diagonal
     # J[x, y] = Y'[x, y]
-    for y in pq_buses:
-        j = (y - 1) * 2
-
+    for y, j in zip(pq_buses, pq_quadrants):
         for x in buses[y].connected_buses:
             i = (x - 1) * 2
 
@@ -35,22 +33,20 @@ def current_injections_solver(_, max_nit, tol):
                 ]
 
     # main loop
-    for nit in range(max_nit + 1):
-        # current inyections
+    while True:
+        # update error vector
         for y in range(1, n):
             ΔI[y - 1] = np.conj(S[y] / V[y]) - Y[y].dot(V)
 
         err[0::2] = ΔI.real
         err[1::2] = ΔI.imag
 
-        # starting with this to show initial conditions
-        yield nit, J, err
+        # yield data
+        yield err, J
 
         # Y' for elems inside diagonal
         # J[x, x] = Y'[x, x] + D'[x]
         for x, i in zip(pq_buses, pq_quadrants):
-            # i = (x - 1) * 2
-
             if x != 0:
                 V4 = np.abs(V[x]) ** 4
                 a = (Q[x] * (E[x] ** 2 - U[x] ** 2) - 2 * P[x] * U[x] * E[x]) / V4
@@ -72,9 +68,7 @@ def current_injections_solver(_, max_nit, tol):
 
         # Y" for all elems
         # J[x, y] = Y"[x, y] + D"[x]
-        for y in pv_buses:
-            j = (y - 1) * 2
-
+        for y, j in zip(pv_buses, pv_quadrants):
             for x in buses[y].connected_buses:
                 i = (x - 1) * 2
 
@@ -94,7 +88,7 @@ def current_injections_solver(_, max_nit, tol):
                             ]
                         ) / (np.abs(V[x]) ** 2)
 
-        ΔV = spsolve(J.tocsr(), err.tocsr())
+        ΔV = spsolve(J.tocsr(), err)
 
         # applying changes
         U[pq_buses] -= ΔV[pq_quadrants,]

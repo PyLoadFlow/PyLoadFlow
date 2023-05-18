@@ -6,7 +6,7 @@ from lib.classes.Bus import Bus, SlackBus, PQBus, PVBus
 # from lib.decorators.electric import electric_power_system_as_self as electric
 
 
-class BusManager:
+class BusAdder:
     def __init__(self):
         self.buses = []
         self.pq_buses_yids = np.empty(0, dtype=Bus.index_dtype)

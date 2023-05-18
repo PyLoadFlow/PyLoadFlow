@@ -1,4 +1,2 @@
-from lib.solvers.CurrentInjectionsSolver import CurrentInjectionsSolver
-from lib.solvers.FastDecoupledSolver import FastDecoupledSolver
-
-__all__ = "CurrentInjectionsSolver", "FastDecoupledSolver"
+from lib.solvers.current_injections_solver import *
+from lib.solvers.fast_decoupled_solver import *
