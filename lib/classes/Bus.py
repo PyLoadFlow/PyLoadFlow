@@ -1,3 +1,4 @@
+# pyright: reportUndefinedVariable=false
 import numpy as np
 
 from lib.decorators import electric_power_system_as_property as electric
@@ -35,21 +36,3 @@ class Bus:
     @electric
     def programmed_current_pu(self):
         return np.conj(S[y] / V[y])
-
-
-class SlackBus(Bus):
-    pass
-
-
-class PQBus(Bus):
-    pass
-
-
-class PVBus(Bus):
-    def __init__(self, power_system, fixed_voltage):
-        Bus.__init__(self, power_system)
-        self.fixed_voltage = fixed_voltage
-
-
-class ZIPBus(PQBus):
-    pass

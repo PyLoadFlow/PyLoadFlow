@@ -3,14 +3,21 @@ from scipy.sparse import lil_matrix
 
 
 class Allocator:
+    """Mixin of PowerSystem to allocate the numpy/scipy arrays"""
+
     complex_dtype = np.complex128
     float_dtype = np.float64
     indexing_dtype = np.uint32
 
-    def __init__(self, n):
+    def __init__(self, n: int):
+        """
+        Args:
+            n (int): number of buses from the system
+        """
         self.allocate_electric_params(n)
 
     def allocate_electric_params(self, n):
+        """Creates the numpy/scipy arrays that will be used for all calculations (doesn't inititialices them)"""
         self.number_of_buses = n
 
         # allocate voltages with inicial values of 1

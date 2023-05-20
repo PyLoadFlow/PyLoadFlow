@@ -7,21 +7,39 @@ from lib.classes.PowerSystem_mixins.Solver import Solver
 
 
 class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
+    """Main program class to do all power flow calculations"""
+
     complex_dtype = np.complex128
     float_dtype = np.float64
 
-    def __init__(self, n):
+    def __init__(self, n: int):
+        """
+        Args:
+            n (int): Number of buses from the system
+        """
         Allocator.__init__(self, n)
         BusAdder.__init__(self)
         BusConnector.__init__(self)
         Solver.__init__(self)
 
     def compile(self):
+        """Verifies the power system data and does previous calculations"""
         self.build_line_series_admittance_pu_diagonal()
 
         for bus in self.buses:
-            bus.connected_buses.sort()
+            bus.connected_buses.sort()  # type: ignore
 
-    def run(self, *args, **kwargs):
+    def run(self, method="current inyections", max_nit=25, tol=1e-9):
+        """
+        Shortcut to compile() and solve() methods. Highly recommended
+
+        Args:
+            method ("current inyections" | "cilf" | "fast decoupled" | "fdlf"): Method to solve the system. Defaults to "current inyections".
+            max_nit (int, optional): Max number of iterations. Defaults to 25.
+            tol (float, optional): Max absolute error allowed to stop iterating. Defaults to 1e-9.
+
+        Raises:
+            ConvergenceError: If max_nit is finished and the tol has not been minor
+        """
         self.compile()
-        self.solve(*args, **kwargs)
+        self.solve(method, max_nit, tol)

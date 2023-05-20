@@ -40,7 +40,6 @@ def electric_power_system_as_param(func):
                 "pq_buses": power_system.pq_buses_yids,
                 "pv_buses": power_system.pv_buses_yids,
                 "slack_bus": power_system.slack_bus_yid,
-                "not_slack_buses": power_system.not_slack_buses_yids,
             }
         )
 
