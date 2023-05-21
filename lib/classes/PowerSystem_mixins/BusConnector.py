@@ -30,7 +30,7 @@ class BusConnector:
         buses[i].store_connected_bus_yid(j)
         buses[j].store_connected_bus_yid(i)
 
-    def connect_buses_by_IEEE_id(self, i: int, j: int, z: complex, y=0):
+    def connect_buses_by_IEEE_id(self, i: int, j: int, z: complex, y=0.0j):
         """Same than connect_buses_by_id, but counts from 1 and not from 0 as arrays do
 
         Writes outside diagonal values for the branch impedance matrix, saves shunt impedance and registers buses mutual connection

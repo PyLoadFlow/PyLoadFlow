@@ -12,7 +12,7 @@ class Allocator:
     def __init__(self, n: int):
         """
         Args:
-            n (int): number of buses from the system
+            n (int): number of system buses
         """
         self.allocate_electric_params(n)
 
