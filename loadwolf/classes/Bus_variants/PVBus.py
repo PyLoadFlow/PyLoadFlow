@@ -1,8 +1,8 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 
-from lib.classes.Bus import Bus
-from lib.decorators import electric_power_system_as_property as electric
+from loadwolf.classes.Bus import Bus
+from loadwolf.decorators import electric_power_system_as_property as electric
 
 
 """
@@ -32,8 +32,11 @@ class PVBus(Bus):
         creates the a, b, c and d parameters that will be added to the diagonal quadrant
 
         "a" corresponds to the dIr/dU
+
         "b" corresponds to the dIm/dQ
+
         "c" corresponds to the dIr/dU
+
         "d" corresponds to the dIm/dQ
 
         Returns:

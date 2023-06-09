@@ -5,12 +5,14 @@
     "aaron-bond.better-comments",
     "christian-kohler.path-intellisense",
     "frhtylcn.pythonsnippets",
+    "lucas-rezende.greek-alphabet-snippets",
     "ms-python.black-formatter",
     "ms-python.isort",
     "ms-python.python",
     "ms-python.vscode-pylance",
     "njpwerner.autodocstring",
+    "quiever.supersub",
     "redhat.vscode-yaml",
-    "sldobri.bunker"
+    "sldobri.bunker",
   ]
 }

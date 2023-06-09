@@ -1,12 +1,13 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 
-from lib.decorators import electric_power_system_as_property as electric
+from loadwolf.decorators import electric_power_system_as_property as electric
 
 """
 Note: for special behaviors at any solving algorithms, the methods bust be named with the algorithm 
 initials. eg: A method Bus.faz() used in fast decoupled load flow, must be named Bus.fdlf_faz()
 """
+
 
 class Bus:
     """
@@ -51,8 +52,8 @@ class Bus:
         U[y] = v_initial * np.sin(phase)
 
         # initializing power
-        P[y] = pgen - pload
-        Q[y] = qgen - qload
+        self.power_system.bus_apparent_generation_power_pu[y] = pgen + qgen * 1j
+        self.power_system.bus_apparent_load_power_pu[y] = pload + qload * 1j
 
     def store_connected_bus_yid(self, yid):
         """

@@ -8,6 +8,7 @@ class Allocator:
     complex_dtype = np.complex128
     float_dtype = np.float64
     indexing_dtype = np.uint32
+    lite_complex_dtype = np.complex64
 
     def __init__(self, n: int):
         """
@@ -23,8 +24,10 @@ class Allocator:
         # allocate voltages with inicial values of 1
         self.bus_voltage_pu = np.empty(n, dtype=Allocator.complex_dtype)
 
-        # allocate powers with inicial values of 0
-        self.bus_programed_apparent_power = np.empty(n, dtype=Allocator.complex_dtype)
+        # allocate powers
+        self.bus_apparent_power_pu = np.empty([])
+        self.bus_apparent_generation_power_pu = np.empty(n, dtype=Allocator.lite_complex_dtype)
+        self.bus_apparent_load_power_pu = np.empty(n, dtype=Allocator.lite_complex_dtype)
 
         # allocate admittances with inicial values of 0
         self.line_series_admittance_pu = lil_matrix((n, n), dtype=Allocator.complex_dtype)
@@ -34,8 +37,11 @@ class Allocator:
         self.bus_imaginary_voltage_pu = self.bus_voltage_pu.imag
 
         # S = P + jQ
-        self.bus_programed_real_power = self.bus_programed_apparent_power.real
-        self.bus_programed_reactive_power = self.bus_programed_apparent_power.imag
+        self.bus_real_generation_power_pu = self.bus_apparent_generation_power_pu.real
+        self.bus_reactive_generation_power_pu = self.bus_apparent_generation_power_pu.imag
+
+        self.bus_real_load_power_pu = self.bus_apparent_load_power_pu.real
+        self.bus_reactive_load_power_pu = self.bus_apparent_load_power_pu.imag
 
         # Y = G + jβ
         self.line_series_conductance_pu = self.line_series_admittance_pu.real

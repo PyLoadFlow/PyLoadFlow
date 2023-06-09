@@ -2,7 +2,8 @@
 import numpy as np
 from numpy.testing import assert_allclose, assert_equal
 
-from lib import PowerSystem
+from loadwolf import PowerSystem
+from loadwolf.helpers.apparent_power_mismatch import calculated_apparent_power, apparent_power_mismatch
 
 ps = PowerSystem(n=3)
 
@@ -48,10 +49,10 @@ def test_status_after_compile():
 def test_inicial_conditions():
     assert ps.bus_voltage_pu[0] == 1.05
 
-    assert ps.bus_programed_apparent_power[1] == -4 - 2.5j
+    assert ps.bus_apparent_power_pu[1] == -4 - 2.5j
 
     assert ps.bus_voltage_pu[2] == 1.04
-    assert ps.bus_programed_real_power[2] == 2
+    assert ps.bus_real_power_pu[2] == 2
 
 
 def test_bus_currents():
@@ -64,16 +65,21 @@ def test_filters():
     assert_equal(ps.pv_buses_yids, [2])
 
 
+def test_power_mismatch_before_solve():
+    assert_allclose(calculated_apparent_power(ps)[1:], [-1.14 - 2.28j, 0.5616 + 1.0192j])
+    assert_allclose(apparent_power_mismatch(ps)[1:], [-2.86 - 0.22j, 1.4384 - 1.0192j])
+
+
 def test_current_inyections():
     ps.select_solver("current inyections")
 
     # initial values
-    err, J = ps.do_step()
+    J, err = ps.do_step()
 
     assert_allclose(err, [-2.86, 0.22, 1.38307692, 0.98])
 
     # 1st iter
-    err, J = ps.do_step()
+    J, err = ps.do_step()
 
     assert_allclose(
         J.toarray(),
@@ -90,7 +96,7 @@ def test_current_inyections():
     assert_allclose(err, [0.011791029677, 0.008545474001, -0.011129542951, -0.002335204221])
 
     # 2nd iter
-    err, J = ps.do_step()
+    J, err = ps.do_step()
 
     assert_allclose(
         J.toarray(),
@@ -107,7 +113,7 @@ def test_current_inyections():
     assert_allclose(err, [-2.165102674923e-08, 3.077805654783e-08, -2.808616046401e-07, -3.181615007009e-07])
 
     # 3rd iter
-    err, J = ps.do_step()
+    J, err = ps.do_step()
 
     assert_allclose(
         J.toarray(),
@@ -120,3 +126,31 @@ def test_current_inyections():
     )
 
     assert_allclose(ps.bus_voltage_pu, [1.05, 0.97060388168 - 0.045712315571j, 1.039960589436 - 0.009053862142j])
+
+
+def test_current_fast_decoupled():
+    ps.bus_voltage_pu[:] = 1.05, 1, 1.04
+    ps.bus_apparent_power_pu[:] = [1, -4 - 2.5j, 2]
+
+    ps.select_solver("fast decoupled")
+
+    # initial values
+    (β_prime, β_dprime), (ΔP, ΔQ), (Δδ, ΔV) = ps.do_step()
+
+    assert_allclose(
+        β_prime.toarray(),
+        [
+            [52, -32],
+            [-32, 62],
+        ],
+    )
+
+    # assert_allclose doesn't work
+    assert β_dprime.shape == (1, 1)
+    assert β_dprime[0, 0] == 52
+
+    assert_allclose(ΔP, [-2.86, 1.4384])
+    assert_allclose(ΔQ, [-0.22])
+
+    assert_allclose(Δδ, [-0.060482517, -0.00890909090])
+    assert_allclose(ΔV, [-0.004230769])

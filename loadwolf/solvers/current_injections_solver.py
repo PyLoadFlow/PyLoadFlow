@@ -3,11 +3,22 @@ import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import spsolve
 
-from lib.classes.PowerSystem_mixins.Allocator import Allocator
-from lib.decorators import electric_power_system_as_param as electric
+from loadwolf.classes.PowerSystem_mixins.Allocator import Allocator
+from loadwolf.decorators import electric_power_system_as_param as electric
+
 
 @electric
 def current_injections_solver(_):
+    """
+    Solves the system using Current injections method (cilf)
+
+    Args:
+        ps (PowerSystem): the system we are trying to solve
+
+    Yields:
+        tuple[NDArray, dict]: error vector and specific method data
+    """
+
     ## initial configuration
     m = 2 * (n - 1)
 
@@ -41,7 +52,7 @@ def current_injections_solver(_):
         err[1::2] = ΔI.imag
 
         # yield data
-        yield err, J
+        yield err, {"J": J}
 
         # Y' for elems inside diagonal
         # J[x, x] = Y'[x, x] + D'[x]

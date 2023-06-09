@@ -1,4 +1,4 @@
-name: tesis
+name: loadwolfdev
 channels:
   - conda-forge
   - defaults
@@ -7,6 +7,8 @@ dependencies:
   - numpy=1.24
   - overrides=7.3
   - prettyprinter=0.18
+  - prettytable=3.7
   - pytest=7.2
   - python=3.11
   - scipy=1.10
+  - setuptools=67.7

@@ -2,3 +2,4 @@
 trash
 *.lnk
 .pytest_cache
+main.py

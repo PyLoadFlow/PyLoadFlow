@@ -1,9 +1,9 @@
 import numpy as np
 
-from lib.classes.Bus import Bus
-from lib.classes.Bus_variants.SlackBus import SlackBus
-from lib.classes.Bus_variants.PQBus import PQBus
-from lib.classes.Bus_variants.PVBus import PVBus
+from loadwolf.classes.Bus import Bus
+from loadwolf.classes.Bus_variants.SlackBus import SlackBus
+from loadwolf.classes.Bus_variants.PQBus import PQBus
+from loadwolf.classes.Bus_variants.PVBus import PVBus
 
 
 class BusAdder:
@@ -15,16 +15,18 @@ class BusAdder:
         self.pv_buses_yids = np.empty(0, dtype=Bus.index_dtype)
         self.slack_bus_yid = 0
 
-    def add_slack_bus(self, V=1.0, δ=0.0) -> SlackBus:
+    def add_slack_bus(self, V=1.0, δ=0.0, pload=0.0, qload=0.0) -> SlackBus:
         """Creates a slack bus (fixed voltage magnitude and phase angle)
         IMPORTANT: per now, the SlackBus instance will have the yid 0 in every case
 
         Args:
             δ (float): voltage phase angle in radians
             V (float): voltage magnitude in pu
+            pload (float): load real power magnitude in pu if it exist
+            qload (float): load real power magnitude in pu if it exist
         """
         bus = SlackBus(self)
-        bus.define_initial_conditions(v_initial=V, phase=δ)
+        bus.define_initial_conditions(v_initial=V, phase=δ, pload=pload, qload=qload)
         return bus
 
     def add_pq_bus(self, P: float, Q=0.0) -> PQBus:
@@ -39,17 +41,18 @@ class BusAdder:
         bus.define_initial_conditions(pload=P, qload=Q)
         return bus
 
-    def add_pv_bus(self, P: float, V=1.0, pload=0.0) -> PVBus:
+    def add_pv_bus(self, P: float, V=1.0, pload=0.0, qload=0.0) -> PVBus:
         """Creates a pv bus (fixed voltage magnitude and generation real power)
 
         Args:
             P (float): generated real power magnitude in pu
             V (float): voltage magnitude in pu
             pload (float): load real power magnitude in pu if it exist
+            qload (float): load real power magnitude in pu if it exist
         """
         self.pv_buses_yids = np.append(self.pv_buses_yids, [len(self.buses)])
         bus = PVBus(self, fixed_voltage=V)
-        bus.define_initial_conditions(pgen=P, v_initial=V, pload=pload)
+        bus.define_initial_conditions(pgen=P, v_initial=V, pload=pload, qload=qload)
         return bus
 
     def add_load_bus(self, P: float, pf=1.0) -> PQBus:

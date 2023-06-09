@@ -1,7 +1,8 @@
-from lib.classes.PowerSystem_mixins.Allocator import Allocator
-from lib.classes.PowerSystem_mixins.BusAdder import BusAdder
-from lib.classes.PowerSystem_mixins.BusConnector import BusConnector
-from lib.classes.PowerSystem_mixins.Solver import Solver
+from loadwolf.classes.PowerSystem_mixins.Allocator import Allocator
+from loadwolf.classes.PowerSystem_mixins.BusAdder import BusAdder
+from loadwolf.classes.PowerSystem_mixins.BusConnector import BusConnector
+from loadwolf.classes.PowerSystem_mixins.Solver import Solver
+from loadwolf.errors import NotCompiledSystemError
 
 
 class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
@@ -14,6 +15,7 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
         Args:
             n (int): Number of system buses
         """
+        self.__compiled = False
 
         Allocator.__init__(self, n)
         BusAdder.__init__(self)
@@ -24,11 +26,21 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
         """
         Verifies the power system data and does previous calculations
         """
+        self.__compiled = True
 
         self.build_line_series_admittance_pu_diagonal()
+        
+        self.bus_apparent_power_pu = self.bus_apparent_generation_power_pu - self.bus_apparent_load_power_pu
 
         for bus in self.buses:
             bus.connected_buses.sort()  # type: ignore
+
+    def verify(self):
+        """
+        Verifies the power system was compiled to start calculations
+        """
+        if not self.__compiled:
+            raise NotCompiledSystemError()
 
     def run(self, method="current inyections", max_nit=25, tol=1e-9):
         """
