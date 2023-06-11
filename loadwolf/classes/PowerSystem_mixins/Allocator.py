@@ -26,8 +26,8 @@ class Allocator:
 
         # allocate powers
         self.bus_apparent_power_pu = np.empty([])
-        self.bus_apparent_generation_power_pu = np.empty(n, dtype=Allocator.lite_complex_dtype)
-        self.bus_apparent_load_power_pu = np.empty(n, dtype=Allocator.lite_complex_dtype)
+        self.bus_apparent_generation_power_pu = np.empty(n, dtype=Allocator.complex_dtype)
+        self.bus_apparent_load_power_pu = np.empty(n, dtype=Allocator.complex_dtype)
 
         # allocate admittances with inicial values of 0
         self.line_series_admittance_pu = lil_matrix((n, n), dtype=Allocator.complex_dtype)

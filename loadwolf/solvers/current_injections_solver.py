@@ -52,7 +52,10 @@ def current_injections_solver(_):
         err[1::2] = ΔI.imag
 
         # yield data
-        yield err, {"J": J}
+        yield err, {
+            "J": J,
+            "ΔI":ΔI,
+        }
 
         # Y' for elems inside diagonal
         # J[x, x] = Y'[x, x] + D'[x]

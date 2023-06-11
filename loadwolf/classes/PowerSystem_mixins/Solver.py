@@ -74,6 +74,8 @@ class Solver:
         for _ in self.step_by_step(method, max_nit, tol):
             pass
 
+        self.post_solve()
+
     def do_step(self):
         """
         Takes the next step value from step_by_step() active solver
@@ -112,7 +114,7 @@ class Solver:
 
         # Q for PV buses
         self.bus_reactive_generation_power_pu[pv_buses,] = (
-            self.bus_reactive_load_power_pu[pv_buses,] + self.calculated_apparent_power()[pv_buses,].imag
+            self.calculated_apparent_power()[pv_buses,].imag + self.bus_reactive_load_power_pu[pv_buses,]
         )
 
     def verify(self):

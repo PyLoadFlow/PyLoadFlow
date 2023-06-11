@@ -51,4 +51,4 @@ class BusConnector:
         """Calculates diagonal inside values"""
         # calculating self admittances from sum of mutual admittances
         for y in range(n):
-            Y[y, y] = -Y[y].sum()
+            Y[y, y] = 2 * Y[y, y] - Y[y].sum()
