@@ -2,8 +2,8 @@
 import numpy as np
 from numpy.testing import assert_allclose, assert_equal
 
-from loadwolf import PowerSystem
-from loadwolf.helpers.apparent_power_mismatch import calculated_apparent_power, apparent_power_mismatch
+from pyloadflow import PowerSystem
+from pyloadflow.helpers.apparent_power_mismatch import calculated_apparent_power, apparent_power_mismatch
 
 ps = PowerSystem(n=3)
 

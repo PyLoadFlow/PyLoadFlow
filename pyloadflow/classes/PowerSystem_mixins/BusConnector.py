@@ -1,5 +1,5 @@
 # pyright: reportUndefinedVariable=false
-from loadwolf.decorators.electric import electric_power_system_as_self as electric
+from pyloadflow.decorators.electric import electric_power_system_as_self as electric
 
 
 class BusConnector:

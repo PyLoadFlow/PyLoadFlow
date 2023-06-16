@@ -1,7 +1,7 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 
-from loadwolf.decorators import electric_power_system_as_property as electric
+from pyloadflow.decorators import electric_power_system_as_property as electric
 
 """
 Note: for special behaviors at any solving algorithms, the methods bust be named with the algorithm 

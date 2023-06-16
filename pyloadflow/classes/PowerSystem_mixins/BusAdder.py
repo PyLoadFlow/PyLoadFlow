@@ -1,9 +1,9 @@
 import numpy as np
 
-from loadwolf.classes.Bus import Bus
-from loadwolf.classes.Bus_variants.SlackBus import SlackBus
-from loadwolf.classes.Bus_variants.PQBus import PQBus
-from loadwolf.classes.Bus_variants.PVBus import PVBus
+from pyloadflow.classes.Bus import Bus
+from pyloadflow.classes.Bus_variants.SlackBus import SlackBus
+from pyloadflow.classes.Bus_variants.PQBus import PQBus
+from pyloadflow.classes.Bus_variants.PVBus import PVBus
 
 
 class BusAdder:

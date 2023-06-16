@@ -1,4 +1,4 @@
-from loadwolf import PowerSystem
+from pyloadflow import PowerSystem
 
 # to display
 from prettytable import PrettyTable

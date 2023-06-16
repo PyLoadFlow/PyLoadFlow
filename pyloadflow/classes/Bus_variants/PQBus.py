@@ -1,8 +1,8 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 
-from loadwolf.classes.Bus import Bus
-from loadwolf.decorators import electric_power_system_as_property as electric
+from pyloadflow.classes.Bus import Bus
+from pyloadflow.decorators import electric_power_system_as_property as electric
 
 
 """

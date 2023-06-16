@@ -3,8 +3,8 @@ import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import spsolve
 
-from loadwolf.classes.PowerSystem_mixins.Allocator import Allocator
-from loadwolf.decorators import electric_power_system_as_param as electric
+from pyloadflow.classes.PowerSystem_mixins.Allocator import Allocator
+from pyloadflow.decorators import electric_power_system_as_param as electric
 
 
 @electric
@@ -54,7 +54,7 @@ def current_injections_solver(_):
         # yield data
         yield err, {
             "J": J,
-            "ΔI":ΔI,
+            "ΔI": ΔI,
         }
 
         # Y' for elems inside diagonal

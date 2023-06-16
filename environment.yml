@@ -1,4 +1,4 @@
-name: loadwolfdev
+name: pyloadflowdev
 channels:
   - conda-forge
   - defaults

@@ -3,8 +3,8 @@ import numpy as np
 from scipy.sparse import csc_matrix, lil_matrix
 from scipy.sparse.linalg import splu
 
-from loadwolf.decorators import electric_power_system_as_param as electric
-from loadwolf.helpers.math_helpers import cis
+from pyloadflow.decorators import electric_power_system_as_param as electric
+from pyloadflow.helpers.math_helpers import cis
 
 
 @electric

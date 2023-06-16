@@ -1,4 +1,4 @@
-# LoadWolf
+# pyloadflow
 
 A simple and powerful load calculations library for python 3
 
@@ -12,7 +12,7 @@ Solve power systems with
 Let's Solve the 3-bus Hadi Saadat power system
 
 ```python
-from loadwolf import PowerSystem
+from pyloadflow import PowerSystem
 
 ps = PowerSystem(n=3)
 
@@ -35,10 +35,8 @@ Result:
 
 ```bash
 [1.05      +0.j         0.97060388-0.04571232j 1.03996059-0.00905386j]
-[ 0.+0.j         -4.-2.5j         2.+1.46176925j]
+[2.18422834+1.40851505j         -4.-2.5j         2.+1.46176925j]
 ```
-
-
 
 Proyecto de tesis de Luis Miguel Pintor Olivares
 

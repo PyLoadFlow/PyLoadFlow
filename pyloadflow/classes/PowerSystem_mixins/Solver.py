@@ -1,10 +1,10 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 
-from loadwolf.classes.PowerSystem_mixins.Allocator import Allocator
-from loadwolf.decorators import electric_power_system_as_self as electric
-from loadwolf.errors import ConvergenceError
-from loadwolf.solvers import *
+from pyloadflow.classes.PowerSystem_mixins.Allocator import Allocator
+from pyloadflow.decorators import electric_power_system_as_self as electric
+from pyloadflow.errors import ConvergenceError
+from pyloadflow.solvers import *
 
 
 class Solver:
@@ -108,9 +108,9 @@ class Solver:
         """
 
         # P and Q for the slack bus
-        self.bus_apparent_generation_power_pu[0] = (
-            V[0].conj() * Y[0].dot(V)
-        ).conj() + self.bus_apparent_load_power_pu[0]
+        self.bus_apparent_generation_power_pu[0] = (V[0].conj() * Y[0].dot(V)).conj() + self.bus_apparent_load_power_pu[
+            0
+        ]
 
         # Q for PV buses
         self.bus_reactive_generation_power_pu[pv_buses,] = (

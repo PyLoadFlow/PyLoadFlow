@@ -1,4 +1,4 @@
-from loadwolf import PowerSystem
+from pyloadflow import PowerSystem
 
 ps = PowerSystem(n=3)
 
