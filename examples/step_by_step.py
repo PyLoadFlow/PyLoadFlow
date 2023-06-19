@@ -24,7 +24,7 @@ err_table.field_names = "nit", "err"
 ps.compile()
 
 # solve system
-for nit, err, data in ps.step_by_step(method="cilf", max_nit=16, tol=1e-5):
+for nit, err, data in ps.step_by_step(method="fdlf", max_nit=16, tol=1e-5):
     err_table.add_row([nit, err])
 
 print(err_table)

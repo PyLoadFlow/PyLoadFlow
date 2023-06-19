@@ -1,5 +1,6 @@
 **/__pycache__
-trash
+**/__resultfiles
 *.lnk
 .pytest_cache
 main.py
+trash

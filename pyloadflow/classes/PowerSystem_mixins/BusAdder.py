@@ -66,4 +66,4 @@ class BusAdder:
 
     def add_noload_bus(self) -> PQBus:
         """Creates a pq bus (fixed load real and reactive power) with P=0 and Q=0"""
-        return PQBus(self)
+        return self.add_pq_bus(0, 0)

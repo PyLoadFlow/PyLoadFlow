@@ -55,6 +55,8 @@ class Bus:
         self.power_system.bus_apparent_generation_power_pu[y] = pgen + qgen * 1j
         self.power_system.bus_apparent_load_power_pu[y] = pload + qload * 1j
 
+        # substraction made in .compile()
+
     def store_connected_bus_yid(self, yid):
         """
         Registers the connection between this bus and another to make loops

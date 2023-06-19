@@ -7,7 +7,7 @@
     "**/__pycache__": true,
     "**/*.lnk": true,
     ".pytest_cache": true,
-    "trash": true
+    "trash": false
   },
   "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "black",

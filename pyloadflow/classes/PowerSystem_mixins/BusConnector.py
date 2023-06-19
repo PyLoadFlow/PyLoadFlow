@@ -46,6 +46,13 @@ class BusConnector:
         # fulfilling IEEE std. to numerate from 1 and not from 0
         return self.connect_buses_by_id(i - 1, j - 1, z, y, y_2)
 
+    def connect_buses_with_taps_by_id(self, i: int, j: int, z: complex, a=1.0):
+        h = 1 / a
+        return self.connect_buses_by_id(i, j, z=a * z, y_i=h * (h - 1) / z, y_j=(1 - h) / z)
+
+    def connect_buses_with_taps_by_IEEE_id(self, i: int, j: int, z: complex, a=1.0):
+        return self.connect_buses_with_taps_by_id(i - 1, j - 1, z=z, a=a)
+
     @electric
     def build_line_series_admittance_pu_diagonal(self):
         """Calculates diagonal inside values"""
