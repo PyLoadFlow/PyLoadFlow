@@ -40,4 +40,7 @@ Result:
 
 Proyecto de tesis de Luis Miguel Pintor Olivares
 
-Asesorado por el M. en C. Alejandro Villegas Ortega
+Asesorado por:
+- M. en C. Alejandro Villegas Ortega
+- Lic. Blanca Marina Feregrino Leyva
+- M. en C. Sergio Baruch Barragán Gómez
