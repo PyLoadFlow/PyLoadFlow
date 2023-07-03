@@ -13,15 +13,18 @@ class Solver:
     * checks convergence and evaluates stop criteria
     * give the interfce to make iterations manually
     """
+    
+    def __init__(self):
+        self.converted_pv_buses = []
 
     @electric
     def calculated_apparent_power(self):
-        S_calc = np.empty(n, dtype=Allocator.complex_dtype)
+        YV = np.empty(n, dtype=Allocator.complex_dtype)
 
         for y in range(n):
-            S_calc[y] = Y[y].dot(V)
+            YV[y] = Y[y] @ V
 
-        return (S_calc * V.conj()).conj()
+        return (YV * V.conj()).conj()
 
     @electric
     def apparent_power_mismatch(self):
@@ -52,10 +55,17 @@ class Solver:
 
             yield nit, max_err, data
 
+            # if there are pq vioaltions, restart solver with the new config
+            if self.check_q_limits():
+                self.select_solver(method)
+                self.do_step()
+
+            # check convergence
             if max_err <= tol:
                 self.post_solve()
                 break
 
+            # check if the max iteration was exceeded
             if nit == max_nit:
                 raise ConvergenceError(max_nit, max_err)
 
@@ -119,3 +129,18 @@ class Solver:
 
     def verify(self):
         pass
+
+    @electric
+    def check_q_limits(self):
+        stop = False
+
+        for y in pv_buses:
+            if Q[y] < buses[y].limits[0] or Q[y] > buses[y].limits[1]:
+                Q[y] = np.clip(Q[y], buses[y].limits[0], buses[y].limits[1])
+
+                buses[y].switch_to_pq()
+                self.converted_pv_buses.append(buses[y])
+
+                stop = True
+
+        return stop

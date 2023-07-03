@@ -17,9 +17,16 @@ class PQBus(Bus):
     """
 
     @electric
-    def cilf_diagonal_quadrant_abcd(self) -> tuple[float, float, float, float]:
+    def cilf_quadrant(self, x: int):
+        return [
+            [+β[x, y], -G[x, y]],
+            [-G[x, y], -β[x, y]],
+        ]
+
+    @electric
+    def cilf_diagonal_quadrant(self):
         """
-        creates the a, b, c and d parameters that will be added to the diagonal quadrant
+        creates the a, b, c and d matrix that will be added to the diagonal quadrant
 
         "a" corresponds to the dIr/dU
 
@@ -37,4 +44,7 @@ class PQBus(Bus):
         a = (Q[y] * (E[y] ** 2 - U[y] ** 2) - 2 * P[y] * U[y] * E[y]) / V4
         b = (P[y] * (U[y] ** 2 - E[y] ** 2) - 2 * Q[y] * U[y] * E[y]) / V4
 
-        return a, b, -b, a
+        return [
+            [+a, b],
+            [-b, a],
+        ]

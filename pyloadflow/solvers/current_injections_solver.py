@@ -8,7 +8,7 @@ from pyloadflow.decorators import electric_power_system_as_param as electric
 
 
 @electric
-def current_injections_solver(_):
+def current_injections_solver(ps):
     """
     Solves the system using Current injections method (cilf)
 
@@ -27,6 +27,7 @@ def current_injections_solver(_):
     err = np.empty(m, dtype=Allocator.float_dtype)
     pq_quadrants = (pq_buses - 1) * 2
     pv_quadrants = (pv_buses - 1) * 2
+    ΔV = None
 
     ## initial jacobian
 
@@ -37,16 +38,13 @@ def current_injections_solver(_):
             i = (x - 1) * 2
 
             if x != 0 and x != y:
-                J[i : i + 2, j : j + 2] = [
-                    [+β[x, y], -G[x, y]],
-                    [-G[x, y], -β[x, y]],
-                ]
+                J[i : i + 2, j : j + 2] = buses[y].cilf_quadrant(x)
 
     # main loop
     while True:
         # update error vector
         for y in range(1, n):
-            ΔI[y - 1] = buses[y].programmed_current_pu - Y[y].dot(V)
+            ΔI[y - 1] = buses[y].programmed_current_pu - (Y[y] @ V)
 
         err[0::2] = ΔI.real
         err[1::2] = ΔI.imag
@@ -55,20 +53,16 @@ def current_injections_solver(_):
         yield err, {
             "J": J,
             "ΔI": ΔI,
+            "ΔV": ΔV,
         }
 
         # Y' for elems inside diagonal
         # J[x, x] = Y'[x, x] + D'[x]
         for x, i in zip(pq_buses, pq_quadrants):
             if x != 0:
-                a, b, c, d = buses[x].cilf_diagonal_quadrant_abcd()
+                J[i : i + 2, i : i + 2] = np.array(buses[x].cilf_quadrant(x)) + buses[x].cilf_diagonal_quadrant()
 
-                J[i : i + 2, i : i + 2] = [
-                    [+β[x, x] + a, -G[x, x] + b],
-                    [-G[x, x] + c, -β[x, x] + d],
-                ]
-
-        # Y" for all elems
+        # Y" for all PV elems
         # J[x, y] = Y"[x, y] <+ D"[x]>
         for y, j in zip(pv_buses, pv_quadrants):
             for x in buses[y].connected_buses:
@@ -77,19 +71,13 @@ def current_injections_solver(_):
                 if x != 0:
                     if x != y:
                         # Y"[x, y]
-                        J[i : i + 2, j] = [
-                            G[x, y] * U[y] / E[y] + β[x, y],
-                            β[x, y] * U[y] / E[y] - G[x, y],
-                        ]
+                        J[i : i + 2, j : j + 2] = buses[y].cilf_quadrant(x)
 
                     else:
                         # Y"[y, y] + D"[y]
-                        a, b, c, d = buses[x].cilf_diagonal_quadrant_abcd()
-
-                        J[i : i + 2, j : i + 2] = [
-                            [G[y, y] * U[y] / E[y] + β[y, y] + a, b],
-                            [β[y, y] * U[y] / E[y] - G[y, y] + c, d],
-                        ]
+                        J[i : i + 2, i : i + 2] = (
+                            np.array(buses[y].cilf_quadrant(y)) + buses[y].cilf_diagonal_quadrant()
+                        )
 
         ΔV = spsolve(J.tocsr(), err)
 
@@ -100,5 +88,5 @@ def current_injections_solver(_):
         U[pv_buses] -= ΔV[pv_quadrants,]
         Q[pv_buses] -= ΔV[pv_quadrants + 1,]
 
-        for y in pv_buses:
-            E[y] = np.sqrt(buses[y].fixed_voltage ** 2 - U[y] ** 2)
+        for y in range(n):
+            buses[y].cilf_after_iteration()

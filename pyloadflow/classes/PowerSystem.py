@@ -29,6 +29,8 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
         self.__compiled = True
 
         self.build_line_series_admittance_pu_diagonal()
+        
+        self.line_series_admittance_pu = self.line_series_admittance_pu.tocsc()
 
         self.bus_apparent_power_pu = self.bus_apparent_generation_power_pu - self.bus_apparent_load_power_pu
 

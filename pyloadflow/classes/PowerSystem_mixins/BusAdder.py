@@ -41,7 +41,7 @@ class BusAdder:
         bus.define_initial_conditions(pload=P, qload=Q)
         return bus
 
-    def add_pv_bus(self, P: float, V=1.0, pload=0.0, qload=0.0) -> PVBus:
+    def add_pv_bus(self, P: float, V=1.0, pload=0.0, qload=0.0, Qmin=-20.0, Qmax=20.0) -> PVBus:
         """Creates a pv bus (fixed voltage magnitude and generation real power)
 
         Args:
@@ -49,9 +49,11 @@ class BusAdder:
             V (float): voltage magnitude in pu
             pload (float): load real power magnitude in pu if it exist
             qload (float): load real power magnitude in pu if it exist
+            Qmin (float): generated reactive power magnitude min limit in pu
+            Qmax (float): generated reactive power magnitude max limit in pu
         """
         self.pv_buses_yids = np.append(self.pv_buses_yids, [len(self.buses)])
-        bus = PVBus(self, fixed_voltage=V)
+        bus = PVBus(self, fixed_voltage=V, limits=(Qmin, Qmax))
         bus.define_initial_conditions(pgen=P, v_initial=V, pload=pload, qload=qload)
         return bus
 

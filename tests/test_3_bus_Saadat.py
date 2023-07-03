@@ -130,7 +130,7 @@ def test_current_inyections():
 
 def test_current_fast_decoupled():
     ps.bus_voltage_pu[:] = 1.05, 1, 1.04
-    ps.bus_apparent_power_pu[:] = [1, -4 - 2.5j, 2]
+    ps.bus_apparent_power_pu[:] = 1, -4 - 2.5j, 2
 
     ps.select_solver("fast decoupled")
 

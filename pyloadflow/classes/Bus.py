@@ -68,3 +68,9 @@ class Bus:
     @electric
     def programmed_current_pu(self):
         return np.conj(S[y] / V[y])
+    
+    def cilf_after_iteration(self):
+        pass
+    
+    def cilf_before_iteration(self):
+        pass
