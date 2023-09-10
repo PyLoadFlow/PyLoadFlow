@@ -1,11 +1,12 @@
 from pyloadflow.classes.PowerSystem_mixins.Allocator import Allocator
 from pyloadflow.classes.PowerSystem_mixins.BusAdder import BusAdder
 from pyloadflow.classes.PowerSystem_mixins.BusConnector import BusConnector
+from pyloadflow.classes.PowerSystem_mixins.LinePowerFlowCalculator import LinePowerFlowCalculator
 from pyloadflow.classes.PowerSystem_mixins.Solver import Solver
 from pyloadflow.errors import NotCompiledSystemError
 
 
-class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
+class PowerSystem(Allocator, BusAdder, BusConnector, Solver, LinePowerFlowCalculator):
     """
     Main program class to do all power flow calculations
     """
@@ -21,6 +22,7 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver):
         BusAdder.__init__(self)
         BusConnector.__init__(self)
         Solver.__init__(self)
+        LinePowerFlowCalculator.__init__(self)
 
     def compile(self):
         """
