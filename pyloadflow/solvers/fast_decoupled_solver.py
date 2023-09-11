@@ -44,6 +44,8 @@ def fast_decoupled_solver(ps):
     β_prime_lu = splu(β_prime)
     β_dprime_lu = splu(β_dprime)
 
+    yield 99, {"β'": β_prime, 'β"': β_dprime}
+
     while True:
         # saving current |V| and δ to work in polars
         V_polar = np.abs(V)
@@ -70,6 +72,7 @@ def fast_decoupled_solver(ps):
             'β"': β_dprime,
             "ΔP": ΔP,
             "ΔQ": ΔQ,
+            "ΔS": ΔS,
             "Δδ": Δδ,
             "Δ|V|": ΔV,
             "|V|": V_polar,

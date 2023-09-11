@@ -31,7 +31,7 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver, LinePowerFlowCalcul
         self.__compiled = True
 
         self.build_line_series_admittance_pu_diagonal()
-        
+
         self.line_series_admittance_pu = self.line_series_admittance_pu.tocsc()
 
         self.bus_apparent_power_pu = self.bus_apparent_generation_power_pu - self.bus_apparent_load_power_pu
@@ -39,7 +39,7 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver, LinePowerFlowCalcul
         for bus in self.buses:
             bus.connected_buses.sort()  # type: ignore
 
-    def verify(self):
+    def before_solve(self):
         """
         Verifies the power system was compiled to start calculations
         """

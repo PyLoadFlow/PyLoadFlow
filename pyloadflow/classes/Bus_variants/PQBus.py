@@ -18,6 +18,15 @@ class PQBus(Bus):
 
     @electric
     def cilf_quadrant(self, x: int):
+        """
+        Creates the matrix that will be added to any outside diagonal quadrant
+
+        Parameters:
+            x (int): The x value for which the cilf quadrant will be calculated.
+
+        Returns:
+            list: The matrix
+        """
         return [
             [+β[x, y], -G[x, y]],
             [-G[x, y], -β[x, y]],
@@ -26,7 +35,7 @@ class PQBus(Bus):
     @electric
     def cilf_diagonal_quadrant(self):
         """
-        creates the a, b, c and d matrix that will be added to the diagonal quadrant
+        Creates the a, b, c and d matrix that will be added to any diagonal quadrant
 
         "a" corresponds to the dIr/dU
 

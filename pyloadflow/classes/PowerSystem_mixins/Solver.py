@@ -13,7 +13,7 @@ class Solver:
     * checks convergence and evaluates stop criteria
     * give the interfce to make iterations manually
     """
-    
+
     def __init__(self):
         self.converted_pv_buses = []
 
@@ -30,7 +30,7 @@ class Solver:
     def apparent_power_mismatch(self):
         return S - self.calculated_apparent_power()
 
-    def step_by_step(self, method="current inyections", max_nit=25, tol=1e-9):
+    def step_by_step(self, method="current inyections", max_nit=25, tol=1e-9) -> tuple[int, float, dict]:
         """
         (generator) Counts number of iterations done and the error gotten from any one, raises if the max nit is exceeded
 
@@ -45,7 +45,7 @@ class Solver:
         Yields:
             (int, tuple, dict): a tuple with: the iteration number, current jacobian and error vector
         """
-        self.verify()
+        self.before_solve()
 
         self.select_solver(method)
 
@@ -53,7 +53,7 @@ class Solver:
             err, data = self.do_step()
             max_err = np.abs(err).max()
 
-            yield nit, max_err, data
+            yield nit, max_err, data  # type: ignore
 
             # if there are pq vioaltions, restart solver with the new config
             if self.check_q_limits():
@@ -62,7 +62,7 @@ class Solver:
 
             # check convergence
             if max_err <= tol:
-                self.post_solve()
+                self.after_solve()
                 break
 
             # check if the max iteration was exceeded
@@ -79,12 +79,12 @@ class Solver:
             tol (float, optional): max absolute error allowed to stop iterating. Defaults to 1e-9
 
         """
-        self.verify()
+        self.before_solve()
 
         for _ in self.step_by_step(method, max_nit, tol):
             pass
 
-        self.post_solve()
+        self.after_solve()
 
     def do_step(self):
         """
@@ -109,7 +109,7 @@ class Solver:
         }[method](self)
 
     @electric
-    def post_solve(self):
+    def after_solve(self):
         """
         Makes final calculations for every method, at the moment:
 
@@ -127,7 +127,7 @@ class Solver:
             self.calculated_apparent_power()[pv_buses,].imag + self.bus_reactive_load_power_pu[pv_buses,]
         )
 
-    def verify(self):
+    def before_solve(self):
         pass
 
     @electric
@@ -136,6 +136,7 @@ class Solver:
 
         for y in pv_buses:
             if Q[y] < buses[y].limits[0] or Q[y] > buses[y].limits[1]:
+                # setting Q inside the generation limits using np.clip()
                 Q[y] = np.clip(Q[y], buses[y].limits[0], buses[y].limits[1])
 
                 buses[y].switch_to_pq()

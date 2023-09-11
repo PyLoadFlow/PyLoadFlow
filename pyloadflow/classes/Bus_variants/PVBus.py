@@ -37,9 +37,21 @@ class PVBus(PQBus):
 
     @electric
     def cilf_quadrant(self, x: int):
+        """
+        Creates the matrix that will be added to any outside diagonal quadrant
+
+        Parameters:
+            x (int): The x value for which the cilf quadrant will be calculated.
+
+        Returns:
+            list: The matrix
+        """
+
+        # in case of PV bus exceeded limits of power generation
         if self.mode == PVModes.PQ:
             return super().cilf_quadrant(x)
 
+        # normally...
         return [
             [G[x, y] * U[y] / E[y] + β[x, y], 0],
             [β[x, y] * U[y] / E[y] - G[x, y], 0],
@@ -62,9 +74,11 @@ class PVBus(PQBus):
             -> list[list[float, float], list[float, float]]
         """
 
+        # in case of PV bus exceeded limits of power generation
         if self.mode == PVModes.PQ:
             return super().cilf_diagonal_quadrant()
 
+        # normally...
         V2 = np.abs(V[y]) ** 2
 
         a = (Q[y] - P[y] * U[y] / E[y]) / V2
@@ -79,13 +93,18 @@ class PVBus(PQBus):
 
     @electric
     def cilf_after_iteration(self):
+        """
+        Hook to execute after every iteration of the current injections solver
+        """
         if self.mode == PVModes.PV:
             E[y] = np.sqrt(self.fixed_voltage**2 - U[y] ** 2)
 
-
     def switch_to_pq(self):
+        # in case of PV bus exceeded limits of power generation: transform this bus to PQ type
         self.mode = PVModes.PQ
 
+        # add this bus to the list of PQ buses
         self.power_system.pq_buses_yids = np.append(self.power_system.pq_buses_yids, self.yid)
 
+        # remove this bus from the list of PV buses
         self.power_system.pv_buses_yids = self.power_system.pv_buses_yids[self.power_system.pv_buses_yids != self.yid]
