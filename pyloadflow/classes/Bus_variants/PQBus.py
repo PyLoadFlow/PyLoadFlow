@@ -48,7 +48,6 @@ class PQBus(Bus):
         Returns:
             tuple[float, float, float, float]:: a, b, c and d
         """
-
         V4 = np.abs(V[y]) ** 4
         a = (Q[y] * (E[y] ** 2 - U[y] ** 2) - 2 * P[y] * U[y] * E[y]) / V4
         b = (P[y] * (U[y] ** 2 - E[y] ** 2) - 2 * Q[y] * U[y] * E[y]) / V4

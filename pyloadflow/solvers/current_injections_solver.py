@@ -8,7 +8,7 @@ from pyloadflow.decorators import electric_power_system_as_param as electric
 
 
 @electric
-def current_injections_solver(ps):
+def current_injections_solver(_):
     """
     Solves the system using Current injections method (cilf)
 
@@ -54,6 +54,7 @@ def current_injections_solver(ps):
             "J": J,
             "ΔI": ΔI,
             "ΔV": ΔV,
+            "V": V,
         }
 
         # Y' for elems inside diagonal

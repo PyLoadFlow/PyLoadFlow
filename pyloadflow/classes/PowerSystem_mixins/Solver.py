@@ -45,9 +45,8 @@ class Solver:
         Yields:
             (int, tuple, dict): a tuple with: the iteration number, current jacobian and error vector
         """
-        self.before_solve()
-
         self.select_solver(method)
+        self.before_solve()
 
         for nit in range(max_nit + 1):
             err, data = self.do_step()

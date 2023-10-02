@@ -43,6 +43,7 @@ class PowerSystem(Allocator, BusAdder, BusConnector, Solver, LinePowerFlowCalcul
         """
         Verifies the power system was compiled to start calculations
         """
+
         if not self.__compiled:
             raise NotCompiledSystemError()
 

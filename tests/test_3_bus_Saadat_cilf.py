@@ -19,7 +19,7 @@ ps.select_solver("current inyections")
 
 def test_inicial_conditions():
     err, _ = ps.do_step()
-    
+
     assert_allclose(ps.buses[1].programmed_current_pu, -4 + 2.5j)
     assert_allclose(ps.buses[2].programmed_current_pu, 1.92307692)
 
